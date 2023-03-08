@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.belajar.restapi.model.User;
@@ -40,6 +41,17 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable(value = "id") long id) {
         Optional<User> user = userRepository.findById(id);
+
+        if(user.isPresent()) {
+            return ResponseEntity.ok().body(user.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/find-by-name")
+    public ResponseEntity<User> findUserByName(@RequestParam String name) {
+        Optional<User> user = userRepository.findAllByNameContainingIgnoreCase(name);
 
         if(user.isPresent()) {
             return ResponseEntity.ok().body(user.get());
